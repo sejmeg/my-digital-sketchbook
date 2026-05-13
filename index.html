@@ -1214,7 +1214,7 @@
     function renderGallery() {
       document.getElementById('galleryGrid').innerHTML = getFilteredPosts().map(p =>
         `<div class="gallery-item" onclick="openArticle('${p.id}')">
-      <img src="${p.imageUrl || '' + p.id + '/400/400'}" alt="${p.title}" loading="lazy">
+      <img src="${p.imageUrl || ''}" alt="${p.title}" loading="lazy">
       <div class="gallery-overlay"><span>${p.date.replace(/-/g, '.')}</span></div>
     </div>`
       ).join('');
@@ -1241,7 +1241,7 @@
       </div>
       <div class="diary-entry-gap"></div>
       <div class="diary-image" onclick="openLightbox('${p.imageUrl || ''}')">
-        <img src="${p.imageUrl || '' + p.id + '/400/400'}" alt="${p.title}" loading="lazy">
+        <img src="${p.imageUrl || ''}" alt="${p.title}" loading="lazy">
       </div>
     </div>`;
       }).join('');
@@ -1406,21 +1406,6 @@
       closePostModal();
     }
 
-    // function submitPost() {
-    //   const title   = document.getElementById('inputTitle').value.trim();
-    //   const date    = document.getElementById('inputDate').value;
-    //   const content = document.getElementById('inputContents').value.trim();
-    //   if (!title || !date) { alert('Title と Date は必須です'); return; }
-    //   currentTags.forEach(t => { if (!allTags.includes(t)) allTags.push(t); });
-    //   if (editingPostId) {
-    //     const idx = posts.findIndex(x => x.id === editingPostId);
-    //     if (idx >= 0) posts[idx] = { ...posts[idx], title, date, content, tags: currentTags,
-    //       imageUrl: imageDataUrl || posts[idx].imageUrl };
-    //   } else {
-    //     posts.push({ id: String(Date.now()), title, date, content, tags: currentTags, imageUrl: imageDataUrl || '' });
-    //   }
-    //   savePosts(); closePostModal(); renderSidebar(); renderContent();
-    // }
     async function loadPosts() {
 
       const { data, error } = await supabaseClient
@@ -1509,8 +1494,7 @@
     function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
     // ===== BOOT =====
-    renderSidebar();
-    renderContent();
+    loadPosts();
   </script>
 </body>
 
