@@ -1085,6 +1085,8 @@
       SUPABASE_KEY
     );
 
+    console.log("supabase connected");
+
     // ===== DATA =====
     let posts = JSON.parse(localStorage.getItem('sketchbook_posts') || '[]');
     let allTags = JSON.parse(localStorage.getItem('sketchbook_tags') || '[]');
@@ -1420,8 +1422,6 @@
     }
 
     loadPosts();
-
-    console.log("supabase connected");
 
     // ===== IMAGE =====
     function previewImage(e) {
