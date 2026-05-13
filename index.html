@@ -1088,8 +1088,8 @@
     console.log("supabase connected");
 
     // ===== DATA =====
-    let posts = JSON.parse(localStorage.getItem('sketchbook_posts') || '[]');
-    let allTags = JSON.parse(localStorage.getItem('sketchbook_tags') || '[]');
+    let posts = [];
+    let allTags = [];
 
     let currentMode = 'gallery';
     let currentFilter = { type: null, value: null };
@@ -1099,32 +1099,6 @@
     let imageDataUrl = null;
 
     const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-    // ===== DEMO DATA =====
-    // if (posts.length === 0) {
-    //   const imgs = ['sk1', 'sk2', 'sk3', 'sk4', 'sk5'].map(s => `https://picsum.photos/seed/${s}/400/400`);
-    //   const tagSets = [['キャラクター', 'ファンアート'], ['風景', 'デジタル'], ['スケッチ'], ['カラー', 'オリジナル'], ['線画']];
-    //   const months = ['2026-05', '2026-04', '2026-03', '2026-02', '2026-01'];
-    //   let pid = 1;
-    //   months.forEach(m => {
-    //     for (let d = 1; d <= 5; d++) {
-    //       const day = String(d * 2).padStart(2, '0');
-    //       posts.push({
-    //         id: String(pid++), title: `作品タイトル ${pid - 1}`, date: `${m}-${day}`,
-    //         imageUrl: imgs[d - 1],
-    //         content: '本文が入ります。本文が入ります。本文が入ります。本文が入ります。本文が入ります。\n\n本文が入ります。本文が入ります。本文が入ります。\n\n本文が入ります。',
-    //         tags: tagSets[d - 1]
-    //       });
-    //       tagSets[d - 1].forEach(t => { if (!allTags.includes(t)) allTags.push(t); });
-    //     }
-    //   });
-    //   savePosts();
-    // }
-
-    function savePosts() {
-      localStorage.setItem('sketchbook_posts', JSON.stringify(posts));
-      localStorage.setItem('sketchbook_tags', JSON.stringify(allTags));
-    }
 
     // ===== FAB GROUP 管理 =====
     // 通常: add + top-pc + top-sp(SP) + hamburger(SP)
@@ -1368,7 +1342,7 @@
             post_date: date,
             tags: currentTags
           })
-          .eq("id", editingPostId);
+          .eq("id", Number(editingPostId));
 
         if (error) {
           console.error(error);
@@ -1377,6 +1351,8 @@
         }
 
         alert("更新完了");
+
+        console.log(editingPostId);
 
       } else {
 
@@ -1436,8 +1412,6 @@
       renderSidebar();
       renderContent();
     }
-
-    loadPosts();
 
     // ===== IMAGE =====
     function previewImage(e) {
