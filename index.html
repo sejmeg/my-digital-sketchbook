@@ -1080,7 +1080,7 @@
     const SUPABASE_URL = "https://snkiftxdblqlsiyqsdvr.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNua2lmdHhkYmxxbHNpeXFzZHZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NTU1ODIsImV4cCI6MjA5NDIzMTU4Mn0.H0tfeBIfP9Kf2JLqsu6dhUUDd8HPmuAIbiTT10DRAc8";
 
-    const supabase = window.supabase.createClient(
+    const supabaseClient = window.supabase.createClient(
       SUPABASE_URL,
       SUPABASE_KEY
     );
@@ -1340,7 +1340,7 @@
 
         const fileName = `${Date.now()}_${file.name}`;
 
-        const { error: uploadError } = await supabase.storage
+        const { error: uploadError } = await supabaseClient.storage
           .from("images")
           .upload(fileName, file);
 
@@ -1349,7 +1349,7 @@
           return;
         }
 
-        const { data } = supabase.storage
+        const { data } = supabaseClient.storage
           .from("images")
           .getPublicUrl(fileName);
 
@@ -1357,7 +1357,7 @@
       }
 
       // 投稿保存
-      const { error } = await supabase
+      const { error } = await supabaseClient
         .from("posts")
         .insert([
           {
@@ -1396,7 +1396,7 @@
     // }
     async function loadPosts() {
 
-      const { data, error } = await supabase
+      const { data, error } = await supabaseClient
         .from("posts")
         .select("*")
         .order("created_at", { ascending: false });
