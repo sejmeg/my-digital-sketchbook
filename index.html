@@ -1404,112 +1404,113 @@
 
       await loadPosts();
       closePostModal();
+    }
 
-      // function submitPost() {
-      //   const title   = document.getElementById('inputTitle').value.trim();
-      //   const date    = document.getElementById('inputDate').value;
-      //   const content = document.getElementById('inputContents').value.trim();
-      //   if (!title || !date) { alert('Title と Date は必須です'); return; }
-      //   currentTags.forEach(t => { if (!allTags.includes(t)) allTags.push(t); });
-      //   if (editingPostId) {
-      //     const idx = posts.findIndex(x => x.id === editingPostId);
-      //     if (idx >= 0) posts[idx] = { ...posts[idx], title, date, content, tags: currentTags,
-      //       imageUrl: imageDataUrl || posts[idx].imageUrl };
-      //   } else {
-      //     posts.push({ id: String(Date.now()), title, date, content, tags: currentTags, imageUrl: imageDataUrl || '' });
-      //   }
-      //   savePosts(); closePostModal(); renderSidebar(); renderContent();
-      // }
-      async function loadPosts() {
+    // function submitPost() {
+    //   const title   = document.getElementById('inputTitle').value.trim();
+    //   const date    = document.getElementById('inputDate').value;
+    //   const content = document.getElementById('inputContents').value.trim();
+    //   if (!title || !date) { alert('Title と Date は必須です'); return; }
+    //   currentTags.forEach(t => { if (!allTags.includes(t)) allTags.push(t); });
+    //   if (editingPostId) {
+    //     const idx = posts.findIndex(x => x.id === editingPostId);
+    //     if (idx >= 0) posts[idx] = { ...posts[idx], title, date, content, tags: currentTags,
+    //       imageUrl: imageDataUrl || posts[idx].imageUrl };
+    //   } else {
+    //     posts.push({ id: String(Date.now()), title, date, content, tags: currentTags, imageUrl: imageDataUrl || '' });
+    //   }
+    //   savePosts(); closePostModal(); renderSidebar(); renderContent();
+    // }
+    async function loadPosts() {
 
-        const { data, error } = await supabaseClient
-          .from("posts")
-          .select("*")
-          .order("created_at", { ascending: false });
+      const { data, error } = await supabaseClient
+        .from("posts")
+        .select("*")
+        .order("created_at", { ascending: false });
 
-        if (error) {
-          console.error(error);
-          return;
-        }
-
-        // UI用形式へ変換
-        posts = data.map(post => ({
-          id: String(post.id),
-          title: post.title || "",
-          date: post.post_date || "",
-          imageUrl: post.image_url || "",
-          content: post.content || "",
-          tags: post.tags || []
-        }));
-
-        // タグ一覧再生成
-        allTags = [...new Set(
-          posts.flatMap(p => p.tags || [])
-        )];
-
-        renderSidebar();
-        renderContent();
+      if (error) {
+        console.error(error);
+        return;
       }
 
-      loadPosts();
+      // UI用形式へ変換
+      posts = data.map(post => ({
+        id: String(post.id),
+        title: post.title || "",
+        date: post.post_date || "",
+        imageUrl: post.image_url || "",
+        content: post.content || "",
+        tags: post.tags || []
+      }));
 
-      // ===== IMAGE =====
-      function previewImage(e) {
-        const file = e.target.files[0]; if (!file) return;
-        const reader = new FileReader();
-        reader.onload = ev => {
-          imageDataUrl = ev.target.result;
-          document.getElementById('imagePreview').src = imageDataUrl;
-          document.getElementById('imagePreview').style.display = 'block';
-          document.getElementById('uploadPlusSvg').style.display = 'none';
-        };
-        reader.readAsDataURL(file);
-      }
+      // タグ一覧再生成
+      allTags = [...new Set(
+        posts.flatMap(p => p.tags || [])
+      )];
 
-      // ===== TAGS =====
-      function renderTagsDisplay() {
-        document.getElementById('tagsDisplay').innerHTML = currentTags.map(t =>
-          `<span class="tag-chip">${t}<span class="tag-chip-remove" onclick="removeTag('${t}')">×</span></span>`
-        ).join('');
-      }
-      function removeTag(t) { currentTags = currentTags.filter(x => x !== t); renderTagsDisplay(); }
-
-      document.getElementById('inputTags').addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ',') {
-          e.preventDefault();
-          const val = e.target.value.trim().replace(/,$/, '');
-          if (val && !currentTags.includes(val)) { currentTags.push(val); renderTagsDisplay(); }
-          e.target.value = '';
-          document.getElementById('tagSuggestions').classList.remove('open');
-        }
-      });
-
-      document.getElementById('inputTags').addEventListener('input', e => {
-        const val = e.target.value.trim().toLowerCase();
-        if (!val) { document.getElementById('tagSuggestions').classList.remove('open'); return; }
-        const matches = allTags.filter(t => t.toLowerCase().includes(val) && !currentTags.includes(t));
-        if (!matches.length) { document.getElementById('tagSuggestions').classList.remove('open'); return; }
-        document.getElementById('tagSuggestions').innerHTML = matches.map(t =>
-          `<div class="tag-suggestion-item" onclick="selectTagSuggestion('${t}')">${t}</div>`).join('');
-        document.getElementById('tagSuggestions').classList.add('open');
-      });
-
-      function selectTagSuggestion(t) {
-        if (!currentTags.includes(t)) { currentTags.push(t); renderTagsDisplay(); }
-        document.getElementById('inputTags').value = '';
-        document.getElementById('tagSuggestions').classList.remove('open');
-      }
-
-      // ===== SP MENU =====
-      function toggleSpMenu() { document.getElementById('spMenuOverlay').classList.toggle('open'); }
-      function closeSpMenu() { document.getElementById('spMenuOverlay').classList.remove('open'); }
-
-      // ===== SCROLL TOP =====
-      function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
-
-      // ===== BOOT =====
       renderSidebar();
       renderContent();
+    }
+
+    loadPosts();
+
+    // ===== IMAGE =====
+    function previewImage(e) {
+      const file = e.target.files[0]; if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        imageDataUrl = ev.target.result;
+        document.getElementById('imagePreview').src = imageDataUrl;
+        document.getElementById('imagePreview').style.display = 'block';
+        document.getElementById('uploadPlusSvg').style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // ===== TAGS =====
+    function renderTagsDisplay() {
+      document.getElementById('tagsDisplay').innerHTML = currentTags.map(t =>
+        `<span class="tag-chip">${t}<span class="tag-chip-remove" onclick="removeTag('${t}')">×</span></span>`
+      ).join('');
+    }
+    function removeTag(t) { currentTags = currentTags.filter(x => x !== t); renderTagsDisplay(); }
+
+    document.getElementById('inputTags').addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault();
+        const val = e.target.value.trim().replace(/,$/, '');
+        if (val && !currentTags.includes(val)) { currentTags.push(val); renderTagsDisplay(); }
+        e.target.value = '';
+        document.getElementById('tagSuggestions').classList.remove('open');
+      }
+    });
+
+    document.getElementById('inputTags').addEventListener('input', e => {
+      const val = e.target.value.trim().toLowerCase();
+      if (!val) { document.getElementById('tagSuggestions').classList.remove('open'); return; }
+      const matches = allTags.filter(t => t.toLowerCase().includes(val) && !currentTags.includes(t));
+      if (!matches.length) { document.getElementById('tagSuggestions').classList.remove('open'); return; }
+      document.getElementById('tagSuggestions').innerHTML = matches.map(t =>
+        `<div class="tag-suggestion-item" onclick="selectTagSuggestion('${t}')">${t}</div>`).join('');
+      document.getElementById('tagSuggestions').classList.add('open');
+    });
+
+    function selectTagSuggestion(t) {
+      if (!currentTags.includes(t)) { currentTags.push(t); renderTagsDisplay(); }
+      document.getElementById('inputTags').value = '';
+      document.getElementById('tagSuggestions').classList.remove('open');
+    }
+
+    // ===== SP MENU =====
+    function toggleSpMenu() { document.getElementById('spMenuOverlay').classList.toggle('open'); }
+    function closeSpMenu() { document.getElementById('spMenuOverlay').classList.remove('open'); }
+
+    // ===== SCROLL TOP =====
+    function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+    // ===== BOOT =====
+    renderSidebar();
+    renderContent();
   </script>
 </body>
 
