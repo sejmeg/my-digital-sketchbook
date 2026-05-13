@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Digital Sketchbook</title>
+    <meta name="description" content="デジタルお絵描き日記">
+
+    <!-- CSSの読み込み -->
+    <link rel="stylesheet" href="style.css">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-jp@0.1.8/cdn/display-400.css">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+</head>
+<body>
+
+    <!-- HEADER -->
+<header>
+  <a class="logo" href="#">My Digital Sketchbook</a>
+  <div class="mode-toggle">
+    <button class="active" id="btnGallery" onclick="setMode('gallery')">Gallery</button>
+    <button id="btnDiary" onclick="setMode('diary')">Diary</button>
+  </div>
+</header>
+
+<!-- SP MENU OVERLAY -->
+<div class="sp-menu-overlay" id="spMenuOverlay">
+  <div class="sp-menu-panel">
+    <div id="spMenuContent"></div>
+    <div class="sp-menu-close-row">
+      <button class="sp-menu-close" onclick="closeSpMenu()">
+        <img id="closeIconImg" src="" alt="close">
+      </button>
+    </div>
+  </div>
+  <div class="sp-backdrop" onclick="closeSpMenu()"></div>
+</div>
+
+<!-- APP BODY -->
+<div class="app-body">
+  <aside id="sidebar"><div id="sidebarContent"></div></aside>
+
+  <main>
+    <!-- GALLERY VIEW -->
+    <div id="gallery-view">
+      <div class="gallery-grid" id="galleryGrid"></div>
+    </div>
+
+    <!-- DIARY VIEW -->
+    <div id="diary-view" style="display:none;">
+      <div class="diary-list" id="diaryList"></div>
+    </div>
+
+    <!-- ARTICLE VIEW -->
+    <div id="article-view">
+      <a class="article-back" onclick="closeArticle()">← back</a>
+      <div class="article-hero" id="articleHero">
+        <img id="articleHeroImg" src="" alt="">
+        <div class="article-hero-actions">
+          <button class="fab" onclick="openEditModal(currentArticleId)">
+            <img id="editIconArticle" src="" alt="edit">
+          </button>
+          <button class="fab fab-add" onclick="openAddModal()">
+            <img id="addIconArticle" src="" alt="add">
+          </button>
+        </div>
+      </div>
+      <div class="article-body">
+        <div class="article-date" id="articleDate"></div>
+        <div class="article-title" id="articleTitle"></div>
+        <div class="article-content" id="articleContent"></div>
+        <div class="article-tags" id="articleTags"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- FAB GROUP -->
+<div class="fab-group">
+  <button class="fab fab-add" onclick="openAddModal()">
+    <img id="addIconFab" src="" alt="add">
+  </button>
+  <button class="fab fab-top" onclick="scrollToTop()">
+    <img id="topIconFab" src="" alt="top">
+  </button>
+  <button class="fab fab-hamburger" onclick="toggleSpMenu()">
+    <img id="hamburgerIconFab" src="" alt="menu">
+  </button>
+</div>
+
+<!-- POST MODAL -->
+<div class="modal-overlay" id="postModalOverlay" onclick="handleModalOverlayClick(event,'postModalOverlay')">
+  <div class="post-modal" onclick="event.stopPropagation()">
+    <h2 id="postModalTitle">New</h2>
+    <div class="form-row">
+      <label class="form-label">Title</label>
+      <input class="form-input" type="text" id="inputTitle">
+    </div>
+    <div class="form-row">
+      <label class="form-label">Date</label>
+      <div class="date-input-wrapper">
+        <input type="date" id="inputDate">
+        <span class="date-icon">📅</span>
+      </div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Gallery</label>
+      <div>
+        <button class="image-upload-btn" onclick="document.getElementById('imageInput').click()">
+          <img class="upload-icon" id="uploadPlusIcon" src="" alt="+">
+          <img class="preview-img" id="imagePreview" src="" alt="" style="display:none;">
+        </button>
+        <input class="image-upload-input" type="file" id="imageInput" accept="image/*" onchange="previewImage(event)">
+      </div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Contents</label>
+      <textarea class="form-textarea" id="inputContents"></textarea>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Tags</label>
+      <div class="tags-input-wrapper">
+        <div class="tags-display" id="tagsDisplay"></div>
+        <input class="form-input" type="text" id="inputTags" placeholder="タグを入力してEnter" autocomplete="off">
+        <div class="tag-suggestions" id="tagSuggestions"></div>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-publish" id="publishBtn" onclick="submitPost()">Publish</button>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightbox()">
+  <img class="lightbox-img" id="lightboxImg" src="" alt="" onclick="event.stopPropagation()">
+</div>
+
+    <!-- JavaScriptの読み込み -->
+    <script src="script.js"></script>
+</body>
+</html>
