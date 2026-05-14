@@ -98,7 +98,7 @@
     }
 
     .sidebar-section {
-      margin-bottom: 32px;
+      margin-bottom: 48px;
     }
 
     .sidebar-section h2 {
@@ -106,14 +106,14 @@
       line-height: 1;
       font-weight: 400;
       letter-spacing: 0;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
       color: var(--color-text);
     }
 
     .tags-list {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px 12px;
+      gap: 10px 14px;
       padding-left: 8px;
     }
 
@@ -142,7 +142,7 @@
       align-items: center;
       gap: 4px;
       padding: 0;
-      margin: 0 0 2px;
+      margin: 0 0 10px;
       font-size: 14px;
       color: var(--color-text);
       cursor: pointer;
