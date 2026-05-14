@@ -789,7 +789,7 @@
     /* ===== SP ===== */
     @media (max-width: 767px) {
       :root {
-        --header-height: 104px;
+        --header-height: 121px;
       }
 
       /* ロゴ + gap16 + toggle */
