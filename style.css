@@ -1,716 +1,893 @@
-  :root {
-    --color-bg: #D8D8DA;
-    --color-text: #363530;
-    --color-sub: #706E64;
-    --color-white: #FFFFFF;
-    --color-modal-bg: rgba(54, 53, 48, 0.7);
-    --sidebar-width: 25vw; /* 常に画面幅の25% */
-    --header-height: 129px;
-    --font: 'Gen Interface JP Display', sans-serif;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: var(--font);
-    background: var(--color-bg);
-    color: var(--color-text);
-    min-height: 100vh;
-    letter-spacing: 0;
-  }
-
-  /* ===== HEADER ===== */
-  header {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    background: var(--color-bg);
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    padding: 32px 20px 72px;
-    z-index: 100;
-    border-bottom: 1px solid var(--color-text);
-  }
-
-  .logo {
-    font-size: 16px;
-    line-height: 1;
-    letter-spacing: 0;
-    color: var(--color-text);
-    text-decoration: none;
-  }
-
-  /* トグルボタン外枠: テキストカラー */
-  .mode-toggle {
-    display: flex;
-    border: 1px solid var(--color-text);
-    flex-shrink: 0;
-  }
-
-  .mode-toggle button {
-    background: none;
-    border: none;
-    padding: 5px 16px;
-    font-family: var(--font);
-    font-size: 12px;
-    line-height: 1;
-    cursor: pointer;
-    color: var(--color-sub);
-    letter-spacing: 0;
-    transition: background 0.15s, color 0.15s;
-  }
-
-  .mode-toggle button.active {
-    background: var(--color-white);
-    color: var(--color-text);
-  }
-
-  /* ===== LAYOUT ===== */
-  .app-body {
-    display: flex;
-    padding-top: var(--header-height);
-    min-height: 100vh;
-  }
-
-  /* ===== SIDEBAR ===== */
-  aside {
-    width: var(--sidebar-width);   /* 25vw: min/maxなし → 常に25% */
-    flex-shrink: 0;
-    position: fixed;
-    top: var(--header-height);
-    left: 0;
-    bottom: 0;
-    overflow-y: auto;
-    padding: 32px 20px;
-    border-right: 1px solid var(--color-text);
-    background: var(--color-bg);
-    z-index: 50;
-  }
-
-  .sidebar-section { margin-bottom: 32px; }
-
-  .sidebar-section h2 {
-    font-size: 16px;
-    line-height: 1;
-    font-weight: 400;
-    letter-spacing: 0;
-    margin-bottom: 16px;
-    color: var(--color-text);
-  }
-
-  .tags-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 12px;
-    padding-left: 8px;
-  }
-
-  .tag-item {
-    font-size: 14px;
-    color: var(--color-text);
-    cursor: pointer;
-    padding: 0;
-    margin: 0;
-    letter-spacing: 0;
-    transition: background 0.15s;
-  }
-
-  .tag-item:hover, .tag-item.active { background: var(--color-white); }
-
-  .archive-list { list-style: none; padding-left: 8px; }
-
-  .archive-item {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 0;
-    margin: 0 0 2px;
-    font-size: 14px;
-    color: var(--color-text);
-    cursor: pointer;
-    letter-spacing: 0;
-    transition: background 0.15s;
-  }
-
-  .archive-item:hover, .archive-item.active { background: var(--color-white); }
-  .archive-count { font-size: 11px; }
-
-  /* ===== MAIN ===== */
-  main {
-    margin-left: var(--sidebar-width); /* 25vwと一致 */
-    flex: 1;
-    min-width: 0;
-    padding: 0 0 80px;
-  }
-
-  /* ===== GALLERY ===== */
-  .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0;
-  }
-
-  .gallery-item {
-    aspect-ratio: 1/1;
-    overflow: hidden;
-    cursor: pointer;
-    position: relative;
-    background: #ccc;
-  }
-
-  .gallery-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.3s ease;
-  }
-
-  .gallery-item:hover img { transform: scale(1.03); }
-
-  .gallery-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(54, 53, 48, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-
-  .gallery-item:hover .gallery-overlay { opacity: 1; }
-
-  .gallery-overlay span {
-    color: var(--color-white);
-    font-size: 13px;
-    letter-spacing: 0;
-  }
-
-  /* ===== DIARY ===== */
-  .diary-list {
-    display: flex;
-    flex-direction: column;
-    gap: 80px;
-    padding: 40px 0;
-  }
-
-  /* PC: テキスト50% / 画像50%、間40px */
-  .diary-entry {
-    display: grid;
-    grid-template-columns: 1fr 40px 1fr; /* text | gap | image */
-    grid-template-areas: "content gap image";
-    padding: 0 40px;
-    position: relative;
-    align-items: start;
-  }
-
-  .diary-entry-content {
-    grid-area: content;
-    position: relative; /* 編集ボタン用 */
-  }
-
-  .diary-entry-gap { grid-area: gap; } /* 40pxスペーサー */
-
-  .diary-date-row {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-    margin-bottom: 30px;
-  }
-
-  .diary-date-num {
-    font-size: 32px;
-    letter-spacing: 0.05em;
-    line-height: 1;
-    color: var(--color-text);
-  }
-
-  .diary-date-day {
-    font-size: 20px;
-    letter-spacing: 0.05em;
-    line-height: 1;
-    color: var(--color-text);
-  }
-
-  .diary-title {
-    font-size: 14px;
-    letter-spacing: 0.05em;
-    line-height: 1.5;
-    margin-bottom: 16px;
-    color: var(--color-text);
-  }
-
-  .diary-body {
-    font-size: 14px;
-    letter-spacing: 0.05em;
-    line-height: 1.5;
-    color: var(--color-text);
-    margin-bottom: 16px;
-  }
-
-  .diary-tags-row {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-  }
-
-  .diary-tags {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .diary-tag {
-    font-size: 12px;
-    letter-spacing: 0.05em;
-    line-height: 1;
-    color: var(--color-sub);
-    cursor: pointer;
-  }
-
-  .diary-tag:hover { color: var(--color-text); }
-
-  /* PC: 編集ボタンはタグ行の右端（テキストエリア内） */
-  .diary-edit-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 4px;
-    opacity: 0.6;
-    transition: opacity 0.15s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .diary-edit-btn:hover { opacity: 1; }
-  .diary-edit-btn svg { width: 18px; height: 18px; }
-
-  .diary-image {
-    grid-area: image;
-    aspect-ratio: 1/1;
-    overflow: hidden;
-    cursor: pointer;
-  }
-
-  .diary-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  /* ===== ARTICLE VIEW ===== */
-  #article-view { display: none; }
-
-  .article-back {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    color: var(--color-text);
-    cursor: pointer;
-    padding: 24px 40px 16px;
-    text-decoration: none;
-    letter-spacing: 0;
-    transition: color 0.15s;
-  }
-
-  .article-back:hover { color: var(--color-sub); }
-
-  /* 画像: 左右padding 40px、1:1 */
-  .article-hero-wrap {
-    padding: 0 40px;
-  }
-
-  .article-hero {
-    width: 100%;
-    aspect-ratio: 1/1;
-    overflow: hidden;
-    cursor: pointer;
-    position: relative;
-  }
-
-  .article-hero img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  .article-body { padding: 32px 40px; }
-
-  .article-date-row {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-    margin-bottom: 30px;
-  }
-
-  .article-date-num {
-    font-size: 32px;
-    letter-spacing: 0.05em;
-    line-height: 1;
-    color: var(--color-text);
-  }
-
-  .article-date-day {
-    font-size: 20px;
-    letter-spacing: 0.05em;
-    line-height: 1;
-    color: var(--color-text);
-  }
-
-  .article-title {
-    font-size: 14px;
-    letter-spacing: 0.05em;
-    line-height: 1.5;
-    margin-bottom: 16px;
-  }
-
-  .article-content {
-    font-size: 14px;
-    letter-spacing: 0.05em;
-    line-height: 1.5;
-    margin-bottom: 16px;
-    color: var(--color-text);
-  }
-
-  .article-tags { display: flex; gap: 12px; flex-wrap: wrap; }
-
-  .article-tag {
-    font-size: 12px;
-    letter-spacing: 0.05em;
-    line-height: 1;
-    color: var(--color-sub);
-  }
-
-  /* ===== FAB ===== */
-  .fab-group {
-    position: fixed;
-    bottom: 32px;
-    right: 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    z-index: 200;
-  }
-
-  .fab {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    border: 1px solid var(--color-text);
-    background: var(--color-bg);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-text);
-  }
-
-  .fab svg { width: 20px; height: 20px; }
-  .fab.fab-add svg { width: 22px; height: 22px; }
-
-  /* ===== MODAL ===== */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: var(--color-modal-bg);
-    z-index: 500;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .modal-overlay.open { display: flex; }
-
-  .post-modal {
-    background: var(--color-bg);
-    width: 480px;
-    max-width: 95vw;
-    max-height: 90vh;
-    overflow-y: auto;
-    padding: 48px 40px 40px;
-  }
-
-  .post-modal h2 {
-    text-align: center;
-    font-size: 14px;
-    font-weight: 400;
-    letter-spacing: 0;
-    margin-bottom: 32px;
-  }
-
-  .form-row {
-    display: grid;
-    grid-template-columns: 90px 1fr;
-    align-items: start;
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-
-  .form-label {
-    font-size: 13px;
-    color: var(--color-sub);
-    padding-top: 8px;
-    letter-spacing: 0;
-  }
-
-  .form-input, .form-textarea, input[type="date"] {
-    width: 100%;
-    background: var(--color-white);
-    border: none;
-    outline: none;
-    padding: 8px 12px;
-    font-family: var(--font);
-    font-size: 13px;
-    color: var(--color-text);
-    letter-spacing: 0;
-  }
-
-  .form-textarea { padding: 12px; resize: vertical; min-height: 130px; }
-
-  .date-input-wrapper { position: relative; }
-
-  input[type="date"] {
-    padding-right: 36px;
-    appearance: none;
-    -webkit-appearance: none;
-    cursor: pointer;
-  }
-
-  .date-icon {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-    font-size: 14px;
-    color: var(--color-sub);
-  }
-
-  .image-upload-btn {
-    width: 120px;
-    height: 88px;
-    background: var(--color-white);
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-    color: var(--color-text);
-  }
-
-  .image-upload-btn svg { width: 20px; height: 20px; opacity: 0.4; }
-
-  .image-upload-btn img.preview-img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .image-upload-input { display: none; }
-
-  .tags-display { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
-
-  .tag-chip {
-    background: var(--color-text);
-    color: var(--color-white);
-    font-size: 11px;
-    padding: 2px 8px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    letter-spacing: 0;
-  }
-
-  .tag-chip-remove { cursor: pointer; opacity: 0.7; }
-  .tag-chip-remove:hover { opacity: 1; }
-
-  .tags-input-wrapper { position: relative; }
-
-  .tag-suggestions {
-    position: absolute;
-    top: 100%; left: 0; right: 0;
-    background: var(--color-white);
-    z-index: 10;
-    max-height: 120px;
-    overflow-y: auto;
-    display: none;
-  }
-
-  .tag-suggestions.open { display: block; }
-
-  .tag-suggestion-item {
-    padding: 6px 12px;
-    font-size: 12px;
-    cursor: pointer;
-    letter-spacing: 0;
-  }
-
-  .tag-suggestion-item:hover { background: var(--color-bg); }
-
-  .form-actions { display: flex; justify-content: flex-end; margin-top: 24px; }
-
-  .btn-publish {
-    background: none;
-    border: 1px solid var(--color-text);
-    padding: 6px 20px;
-    font-family: var(--font);
-    font-size: 13px;
-    color: var(--color-text);
-    cursor: pointer;
-    letter-spacing: 0;
-    transition: background 0.15s, color 0.15s;
-  }
-
-  .btn-publish:hover { background: var(--color-text); color: var(--color-white); }
-
-  /* ===== LIGHTBOX ===== */
-  .lightbox-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: var(--color-modal-bg);
-    z-index: 600;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-  }
-
-  .lightbox-overlay.open { display: flex; }
-
-  .lightbox-img {
-    max-width: 90vw;
-    max-height: 90vh;
-    object-fit: contain;
-    cursor: default;
-  }
-
-  /* ===== SP MENU ===== */
-  .sp-menu-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 300;
-  }
-
-  .sp-menu-overlay.open { display: block; }
-
-  .sp-menu-panel {
-    position: absolute;
-    top: var(--header-height);
-    left: 0; right: 0;
-    background: var(--color-bg);
-    padding: 24px 20px 40px;
-    border-bottom: 1px solid var(--color-text);
-  }
-
-  .sp-menu-close-row {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 16px;
-  }
-
-  .sp-menu-close {
-    background: none;
-    border: 1px solid var(--color-text);
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--color-text);
-  }
-
-  .sp-menu-close svg { width: 14px; height: 14px; }
-  .sp-backdrop { position: fixed; inset: 0; z-index: -1; }
-
-  /* ===== PC ONLY ===== */
-  @media (min-width: 768px) {
-    .fab-top-sp, .fab-hamburger { display: none; }
-    /* PC版 diary + article fab: top(PC) を追加 */
-  }
-
-  /* ===== TABLET ===== */
-  @media (max-width: 1279px) and (min-width: 768px) {
-    .gallery-grid { grid-template-columns: repeat(3, 1fr); }
-  }
-
-  /* ===== SP ===== */
-  @media (max-width: 767px) {
-    :root { --header-height: 104px; } /* ロゴ + gap16 + toggle */
-
-    aside { display: none; }
-    main { margin-left: 0; }
-
-    /* SP header: タイトル（左）とトグル（右）を縦並び、上下32px */
-    header {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 16px;
-      padding: 32px 24px;
-      height: auto;
+    :root {
+      --color-bg: #D8D8DA;
+      --color-text: #363530;
+      --color-sub: #706E64;
+      --color-white: #FFFFFF;
+      --color-modal-bg: rgba(54, 53, 48, 0.7);
+      --sidebar-width: 25vw;
+      /* 常に画面幅の25% */
+      --header-height: 129px;
+      --font: 'Gen Interface JP Display', sans-serif;
     }
 
-    .mode-toggle { align-self: flex-end; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    body {
+      font-family: var(--font);
+      background: var(--color-bg);
+      color: var(--color-text);
+      min-height: 100vh;
+      letter-spacing: 0;
+    }
 
-    /* SP diary: 画像→テキストの縦並び */
-    .diary-list { gap: 40px; padding: 24px 0; }
-
-    .diary-entry {
+    /* ===== HEADER ===== */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: var(--color-bg);
       display: flex;
-      flex-direction: column;
-      padding: 0 16px;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 32px 20px 72px;
+      z-index: 100;
+      border-bottom: 1px solid var(--color-text);
+    }
+
+    .logo {
+      font-size: 16px;
+      line-height: 1;
+      letter-spacing: 0;
+      color: var(--color-text);
+      text-decoration: none;
+    }
+
+    /* トグルボタン外枠: テキストカラー */
+    .mode-toggle {
+      display: flex;
+      border: 1px solid var(--color-text);
+      flex-shrink: 0;
+    }
+
+    .mode-toggle button {
+      background: none;
+      border: none;
+      padding: 5px 16px;
+      font-family: var(--font);
+      font-size: 12px;
+      line-height: 1;
+      cursor: pointer;
+      color: var(--color-sub);
+      letter-spacing: 0;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .mode-toggle button.active {
+      background: var(--color-white);
+      color: var(--color-text);
+    }
+
+    /* ===== LAYOUT ===== */
+    .app-body {
+      display: flex;
+      padding-top: var(--header-height);
+      min-height: 100vh;
+    }
+
+    /* ===== SIDEBAR ===== */
+    aside {
+      width: var(--sidebar-width);
+      /* 25vw: min/maxなし → 常に25% */
+      flex-shrink: 0;
+      position: fixed;
+      top: var(--header-height);
+      left: 0;
+      bottom: 0;
+      overflow-y: auto;
+      padding: 32px 20px;
+      border-right: 1px solid var(--color-text);
+      background: var(--color-bg);
+      z-index: 50;
+    }
+
+    .sidebar-section {
+      margin-bottom: 32px;
+    }
+
+    .sidebar-section h2 {
+      font-size: 16px;
+      line-height: 1;
+      font-weight: 400;
+      letter-spacing: 0;
+      margin-bottom: 16px;
+      color: var(--color-text);
+    }
+
+    .tags-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 12px;
+      padding-left: 8px;
+    }
+
+    .tag-item {
+      font-size: 14px;
+      color: var(--color-text);
+      cursor: pointer;
+      padding: 0;
+      margin: 0;
+      letter-spacing: 0;
+      transition: background 0.15s;
+    }
+
+    .tag-item:hover,
+    .tag-item.active {
+      background: var(--color-white);
+    }
+
+    .archive-list {
+      list-style: none;
+      padding-left: 8px;
+    }
+
+    .archive-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0;
+      margin: 0 0 2px;
+      font-size: 14px;
+      color: var(--color-text);
+      cursor: pointer;
+      letter-spacing: 0;
+      transition: background 0.15s;
+    }
+
+    .archive-item:hover,
+    .archive-item.active {
+      background: var(--color-white);
+    }
+
+    .archive-count {
+      font-size: 14px;
+    }
+
+    /* ===== MAIN ===== */
+    main {
+      margin-left: var(--sidebar-width);
+      /* 25vwと一致 */
+      flex: 1;
+      min-width: 0;
+      padding: 0 0 80px;
+    }
+
+    /* ===== GALLERY ===== */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
       gap: 0;
     }
 
-    /* SP: 画像を先に */
+    .gallery-item {
+      aspect-ratio: 1/1;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      background: #ccc;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.03);
+    }
+
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(54, 53, 48, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .gallery-item:hover .gallery-overlay {
+      opacity: 1;
+    }
+
+    .gallery-overlay span {
+      color: var(--color-white);
+      font-size: 14px;
+      letter-spacing: 0;
+    }
+
+    /* ===== DIARY ===== */
+    .diary-list {
+      display: flex;
+      flex-direction: column;
+      gap: 80px;
+      padding: 40px 0;
+    }
+
+    /* PC: テキスト50% / 画像50%、間40px */
+    .diary-entry {
+      display: grid;
+      grid-template-columns: 1fr 40px 1fr;
+      /* text | gap | image */
+      grid-template-areas: "content gap image";
+      padding: 0 40px;
+      position: relative;
+      align-items: start;
+    }
+
+    .diary-entry-content {
+      grid-area: content;
+      position: relative;
+      /* 編集ボタン用 */
+    }
+
+    .diary-entry-gap {
+      grid-area: gap;
+    }
+
+    /* 40pxスペーサー */
+
+    .diary-date-row {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .diary-date-num {
+      font-size: 32px;
+      letter-spacing: 0.05em;
+      line-height: 1;
+      color: var(--color-text);
+    }
+
+    .diary-date-day {
+      font-size: 20px;
+      letter-spacing: 0.05em;
+      line-height: 1;
+      color: var(--color-text);
+    }
+
+    .diary-title {
+      font-size: 14px;
+      letter-spacing: 0.05em;
+      line-height: 1.5;
+      margin-bottom: 16px;
+      color: var(--color-text);
+    }
+
+    .diary-body {
+      font-size: 14px;
+      letter-spacing: 0.05em;
+      line-height: 1.5;
+      color: var(--color-text);
+      margin-bottom: 16px;
+    }
+
+    .diary-tags-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .diary-tags {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .diary-tag {
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      line-height: 1;
+      color: var(--color-sub);
+      cursor: pointer;
+    }
+
+    .diary-tag:hover {
+      color: var(--color-text);
+    }
+
+    /* PC: 編集ボタンはタグ行の右端（テキストエリア内） */
+    .diary-edit-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      opacity: 0.6;
+      transition: opacity 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .diary-edit-btn:hover {
+      opacity: 1;
+    }
+
+    .diary-edit-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
     .diary-image {
-      order: 1;
+      grid-area: image;
+      aspect-ratio: 1/1;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .diary-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ===== ARTICLE VIEW ===== */
+    #article-view {
+      display: none;
+    }
+
+    .article-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: var(--color-text);
+      cursor: pointer;
+      padding: 32px 40px 20px;
+      text-decoration: none;
+      letter-spacing: 0;
+      transition: color 0.15s;
+    }
+
+    .article-back:hover {
+      color: var(--color-sub);
+    }
+
+    /* 画像: 左右padding 40px、1:1 */
+    .article-hero-wrap {
+      padding: 0 40px;
+    }
+
+    .article-hero {
       width: 100%;
       aspect-ratio: 1/1;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .article-hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .article-body {
+      padding: 40px;
+    }
+
+    .article-date-row {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      margin-bottom: 30px;
+    }
+
+    .article-date-num {
+      font-size: 32px;
+      letter-spacing: 0.05em;
+      line-height: 1;
+      color: var(--color-text);
+    }
+
+    .article-date-day {
+      font-size: 20px;
+      letter-spacing: 0.05em;
+      line-height: 1;
+      color: var(--color-text);
+    }
+
+    .article-title {
+      font-size: 16px;
+      line-height: 1;
+      margin-bottom: 24px;
+    }
+
+    .article-content {
+      font-size: 14px;
+      letter-spacing: 0.05em;
+      line-height: 1.5;
+      margin-bottom: 24px;
+      color: var(--color-text);
+    }
+
+    .article-tags {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .article-tag {
+      font-size: 12px;
+      line-height: 1;
+      color: var(--color-sub);
+    }
+
+    /* ===== FAB ===== */
+    .fab-group {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 200;
+    }
+
+    .fab {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--color-text);
+      background: var(--color-bg);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text);
+    }
+
+    .fab svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .fab.fab-add svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--color-modal-bg);
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .post-modal {
+      background: var(--color-bg);
+      width: 480px;
+      max-width: 95vw;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 48px 40px 40px;
+    }
+
+    .post-modal h2 {
+      text-align: center;
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0;
+      margin-bottom: 32px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      align-items: start;
+      gap: 12px;
       margin-bottom: 20px;
     }
 
-    .diary-image img { height: 100%; }
-
-    .diary-entry-content {
-      order: 2;
-      padding-right: 0;
+    .form-label {
+      font-size: 13px;
+      color: var(--color-sub);
+      padding-top: 8px;
+      letter-spacing: 0;
     }
 
-    .diary-entry-gap { display: none; }
+    .form-input,
+    .form-textarea,
+    input[type="date"] {
+      width: 100%;
+      background: var(--color-white);
+      border: none;
+      outline: none;
+      padding: 8px 12px;
+      font-family: var(--font);
+      font-size: 13px;
+      color: var(--color-text);
+      letter-spacing: 0;
+    }
 
-    .diary-date-num { font-size: 24px; }
-    .diary-date-day { font-size: 16px; }
+    .form-textarea {
+      padding: 12px;
+      resize: vertical;
+      min-height: 130px;
+    }
 
-    .diary-body { line-height: 1.75; }
+    .date-input-wrapper {
+      position: relative;
+    }
 
-    /* SP: 編集ボタンはタグ行の右端（diary-tags-rowで制御） */
+    input[type="date"] {
+      padding-right: 36px;
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
 
-    .article-hero-wrap { padding: 0 16px; }
-    .article-body { padding: 20px 16px; }
-    .article-back { padding: 16px 16px 8px; }
-    .article-date-num { font-size: 24px; }
-    .article-date-day { font-size: 16px; }
-    .article-content, .article-title { line-height: 1.75; }
+    .date-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      font-size: 14px;
+      color: var(--color-sub);
+    }
 
-    .fab-group { bottom: 24px; right: 16px; }
-    .fab-top-sp, .fab-hamburger { display: flex; }
-    .fab-top-pc { display: none; }
+    .image-upload-btn {
+      width: 120px;
+      height: 88px;
+      background: var(--color-white);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      color: var(--color-text);
+    }
 
-    .post-modal { padding: 32px 20px 28px; }
-    .form-row { grid-template-columns: 72px 1fr; }
-  }
+    .image-upload-btn svg {
+      width: 20px;
+      height: 20px;
+      opacity: 0.4;
+    }
+
+    .image-upload-btn img.preview-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .image-upload-input {
+      display: none;
+    }
+
+    .tags-display {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .tag-chip {
+      background: var(--color-text);
+      color: var(--color-white);
+      font-size: 11px;
+      padding: 2px 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      letter-spacing: 0;
+    }
+
+    .tag-chip-remove {
+      cursor: pointer;
+      opacity: 0.7;
+    }
+
+    .tag-chip-remove:hover {
+      opacity: 1;
+    }
+
+    .tags-input-wrapper {
+      position: relative;
+    }
+
+    .tag-suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--color-white);
+      z-index: 10;
+      max-height: 120px;
+      overflow-y: auto;
+      display: none;
+    }
+
+    .tag-suggestions.open {
+      display: block;
+    }
+
+    .tag-suggestion-item {
+      padding: 6px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      letter-spacing: 0;
+    }
+
+    .tag-suggestion-item:hover {
+      background: var(--color-bg);
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+
+    .btn-publish {
+      background: none;
+      border: 1px solid var(--color-text);
+      padding: 6px 20px;
+      font-family: var(--font);
+      font-size: 13px;
+      color: var(--color-text);
+      cursor: pointer;
+      letter-spacing: 0;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .btn-publish:hover {
+      background: var(--color-text);
+      color: var(--color-white);
+    }
+
+    /* ===== LIGHTBOX ===== */
+    .lightbox-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--color-modal-bg);
+      z-index: 600;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .lightbox-overlay.open {
+      display: flex;
+    }
+
+    .lightbox-img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      cursor: default;
+    }
+
+    /* ===== SP MENU ===== */
+    .sp-menu-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+    }
+
+    .sp-menu-overlay.open {
+      display: block;
+    }
+
+    .sp-menu-panel {
+      position: absolute;
+      top: var(--header-height);
+      left: 0;
+      right: 0;
+      background: var(--color-bg);
+      padding: 24px 20px 40px;
+      border-bottom: 1px solid var(--color-text);
+      max-height: 50vh;
+    }
+
+    .sp-menu-close-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+
+    .sp-menu-close {
+      background: none;
+      border: 1px solid var(--color-text);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--color-text);
+    }
+
+    .sp-menu-close svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .sp-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+    }
+
+    /* ===== PC ONLY ===== */
+    @media (min-width: 768px) {
+
+      .fab-top-sp,
+      .fab-hamburger {
+        display: none;
+      }
+
+      /* PC版 diary + article fab: top(PC) を追加 */
+    }
+
+    /* ===== TABLET ===== */
+    @media (max-width: 1279px) and (min-width: 768px) {
+      .gallery-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* ===== SP ===== */
+    @media (max-width: 767px) {
+      :root {
+        --header-height: 104px;
+      }
+
+      /* ロゴ + gap16 + toggle */
+
+      aside {
+        display: none;
+      }
+
+      main {
+        margin-left: 0;
+      }
+
+      /* SP header: タイトル（左）とトグル（右）を縦並び、上下32px */
+      header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+        padding: 32px 24px;
+        height: auto;
+      }
+
+      .mode-toggle {
+        align-self: flex-end;
+      }
+
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      /* SP diary: 画像→テキストの縦並び */
+      .diary-list {
+        gap: 40px;
+      }
+
+      .diary-entry {
+        display: flex;
+        flex-direction: column;
+        padding: 0 16px;
+        gap: 0;
+      }
+
+      /* SP: 画像を先に */
+      .diary-image {
+        order: 1;
+        width: 100%;
+        aspect-ratio: 1/1;
+        margin-bottom: 24px;
+      }
+
+      .diary-image img {
+        height: 100%;
+      }
+
+      .diary-entry-content {
+        order: 2;
+        padding-right: 0;
+        width: 100%;
+      }
+
+      .diary-entry-gap {
+        display: none;
+      }
+
+      .diary-date-day {
+        font-size: 16px;
+      }
+
+      .diary-body {
+        line-height: 1.75;
+      }
+
+      /* SP: 編集ボタンはタグ行の右端（diary-tags-rowで制御） */
+
+      .article-hero-wrap {
+        padding: 0 16px;
+      }
+
+      .article-body {
+        padding: 24px 16px;
+      }
+
+      .article-back {
+        padding: 16px 16px 8px;
+      }
+
+      .article-date-day {
+        font-size: 16px;
+      }
+
+      .article-content {
+        line-height: 1.75;
+      }
+
+      .fab-group {
+        bottom: 24px;
+        right: 16px;
+      }
+
+      .fab-top-sp,
+      .fab-hamburger {
+        display: flex;
+      }
+
+      .fab-top-pc {
+        display: none;
+      }
+
+      .post-modal {
+        padding: 32px 20px 28px;
+      }
+
+      .form-row {
+        grid-template-columns: 72px 1fr;
+      }
+
+      #article-view {
+        padding-top: 24px;
+      }
+    }
