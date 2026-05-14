@@ -733,7 +733,7 @@
       left: 0;
       right: 0;
       background: var(--color-bg);
-      padding: 24px 20px 40px;
+      padding: 24px 20px;
       border-bottom: 1px solid var(--color-text);
       max-height: 50vh;
     }
