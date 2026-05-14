@@ -42,7 +42,8 @@
 
   <!-- HEADER -->
   <header>
-    <a class="logo" href="#">My Digital Sketchbook</a>
+    <a class="logo" href="#" onclick="event.preventDefault(); loadPosts(); setMode('gallery');">My Digital
+      Sketchbook</a>
     <div class="mode-toggle">
       <button class="active" id="btnGallery" onclick="setMode('gallery')">Gallery</button>
       <button id="btnDiary" onclick="setMode('diary')">Diary</button>

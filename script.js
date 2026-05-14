@@ -126,7 +126,7 @@ const SUPABASE_URL = "https://snkiftxdblqlsiyqsdvr.supabase.co";
           <span class="diary-date-day">(${DAYS[d.getDay()]})</span>
         </div>
         <div class="diary-title">${p.title}</div>
-        <div class="diary-body">${p.content.replace(/\n/g, '<br>')}</div>
+        <div class="diary-body">${p.content.split(/\n\n/).map(para => `<p style="margin-bottom:16px;">${para.replace(/\n/g, '<br>')}</p>`).join('')}</div>
         <div class="diary-tags-row">
           <div class="diary-tags">${(p.tags || []).map(t => `<span class="diary-tag">${t}</span>`).join('')}</div>
           <button class="diary-edit-btn" onclick="openEditModal('${p.id}')" title="編集">
@@ -155,7 +155,10 @@ const SUPABASE_URL = "https://snkiftxdblqlsiyqsdvr.supabase.co";
       document.getElementById('articleDateNum').textContent = p.date.replace(/-/g, '.');
       document.getElementById('articleDateDay').textContent = `(${DAYS[d.getDay()]})`;
       document.getElementById('articleTitle').textContent = p.title;
-      document.getElementById('articleContent').innerHTML = p.content.replace(/\n/g, '<br>');
+      document.getElementById('articleContent').innerHTML = p.content
+  .split(/\n\n/)
+  .map(para => `<p style="margin-bottom:10px;">${para.replace(/\n/g, '<br>')}</p>`)
+  .join('');
       document.getElementById('articleTags').innerHTML = (p.tags || []).map(t => `<span class="article-tag">${t}</span>`).join('');
 
       document.getElementById('gallery-view').style.display = 'none';

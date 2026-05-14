@@ -321,6 +321,7 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      color: var(--color-text);
     }
 
     .diary-edit-btn:hover {
@@ -331,6 +332,13 @@
       width: 18px;
       height: 18px;
     }
+
+.diary-edit-btn:visited,
+.diary-edit-btn:focus,
+.diary-edit-btn:active {
+  color: var(--color-text);
+  outline: none;
+}
 
     .diary-image {
       grid-area: image;
@@ -426,6 +434,16 @@
       margin-bottom: 24px;
       color: var(--color-text);
     }
+
+.article-content p,
+.diary-body p {
+  margin-bottom: 10px !important; /* ← 段落間の余白 */
+}
+
+.article-content p:last-child,
+.diary-body p:last-child {
+  margin-bottom: 0 !important;
+}
 
     .article-tags {
       display: flex;
@@ -782,6 +800,7 @@
 
       main {
         margin-left: 0;
+        padding-bottom: 150px;
       }
 
       /* SP header: タイトル（左）とトグル（右）を縦並び、上下32px */
