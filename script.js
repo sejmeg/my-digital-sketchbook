@@ -272,6 +272,8 @@ const SUPABASE_URL = "https://snkiftxdblqlsiyqsdvr.supabase.co";
           })
           .eq("id", Number(editingPostId));
 
+          console.log("update error:", error);
+
         if (error) {
           console.error(error);
           alert("更新失敗");
