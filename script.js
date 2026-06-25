@@ -255,6 +255,7 @@ const SUPABASE_URL = "https://snkiftxdblqlsiyqsdvr.supabase.co";
 
         imageUrl = data.publicUrl;
         console.log("新imageUrl:", imageUrl);
+        
       }
 
       // 編集
@@ -308,6 +309,7 @@ const SUPABASE_URL = "https://snkiftxdblqlsiyqsdvr.supabase.co";
         alert("投稿完了");
       }
 
+      console.log("保存直前のimageUrl:", imageUrl);
       await loadPosts();
       closePostModal();
     }
