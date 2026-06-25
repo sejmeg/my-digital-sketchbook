@@ -266,7 +266,7 @@ const SUPABASE_URL = "https://snkiftxdblqlsiyqsdvr.supabase.co";
           .update({
             title: title,
             content: content,
-            image_url: imageUrl || imageDataUrl,
+            image_url: imageUrl ? imageUrl : imageDataUrl,
             post_date: date,
             tags: currentTags
           })
