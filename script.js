@@ -260,6 +260,7 @@ const SUPABASE_URL = "https://snkiftxdblqlsiyqsdvr.supabase.co";
       // 編集
       if (editingPostId) {
 
+        console.log("update imageUrl:", imageUrl, "imageDataUrl:", imageDataUrl);
         const { error } = await supabaseClient
           .from("posts")
           .update({
