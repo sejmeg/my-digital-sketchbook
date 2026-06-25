@@ -254,6 +254,7 @@ const SUPABASE_URL = "https://snkiftxdblqlsiyqsdvr.supabase.co";
           .getPublicUrl(fileName);
 
         imageUrl = data.publicUrl;
+        console.log("新imageUrl:", imageUrl);
       }
 
       // 編集
